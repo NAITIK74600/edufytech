@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SITE, BRANCHES } from "@/lib/config";
+import { SITE, BRANCHES, withBase } from "@/lib/config";
 import {
   IconMail,
   IconPhone,
@@ -46,7 +46,7 @@ export function Footer() {
         <div className="lg:col-span-2">
           <Link href="/" className="flex items-center gap-2 font-heading text-lg font-bold">
             <Image
-              src="/edufyi-logo.jpeg"
+              src={withBase("/edufyi-logo.jpeg")}
               alt="Edufyi Tech logo"
               width={36}
               height={36}

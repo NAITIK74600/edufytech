@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { NAV_ITEMS, type NavItem } from "@/lib/config";
+import { NAV_ITEMS, withBase, type NavItem } from "@/lib/config";
 import { IconMenu, IconClose, IconChevronDown } from "./icons";
 
 export function Navbar() {
@@ -31,7 +31,7 @@ export function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2 font-heading text-lg font-bold">
           <Image
-            src="/edufyi-logo.jpeg"
+            src={withBase("/edufyi-logo.jpeg")}
             alt="Edufyi Tech logo"
             width={36}
             height={36}
