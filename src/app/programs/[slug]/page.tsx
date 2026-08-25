@@ -1,0 +1,229 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getProgram, getPrograms } from "@/lib/db";
+import { formatINR } from "@/lib/config";
+import { Button } from "@/components/Button";
+import { Reveal } from "@/components/Reveal";
+import {
+  IconStar,
+  IconClock,
+  IconLevel,
+  IconCheck,
+  IconArrowRight,
+  domainIcon,
+  IconSparkle,
+} from "@/components/icons";
+
+export async function generateStaticParams() {
+  const programs = await getPrograms();
+  return programs.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/programs/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const program = await getProgram(slug);
+  if (!program) return { title: "Program not found" };
+  return {
+    title: program.title,
+    description: program.short_desc,
+  };
+}
+
+export default async function ProgramDetail({
+  params,
+}: PageProps<"/programs/[slug]">) {
+  const { slug } = await params;
+  const program = await getProgram(slug);
+  if (!program) notFound();
+
+  const Icon = domainIcon[program.category] ?? IconSparkle;
+
+  return (
+    <article>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-[var(--color-border)]">
+        <div aria-hidden className="absolute inset-0 grid-lines" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 top-0 h-96 w-96 rounded-full bg-[var(--color-secondary)]/15 blur-[120px]"
+        />
+        <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-20">
+          <Link
+            href="/programs"
+            className="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)]"
+          >
+            ← All programs
+          </Link>
+          <div className="mt-6 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl brand-gradient text-white">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <span className="rounded-full bg-[var(--color-muted)] px-3 py-1 text-xs font-medium text-[var(--color-muted-foreground)]">
+                  {program.category}
+                </span>
+              </div>
+              <h1 className="mt-5 text-4xl font-bold sm:text-5xl">{program.title}</h1>
+              <p className="mt-4 max-w-2xl text-lg text-[var(--color-muted-foreground)]">
+                {program.description}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[var(--color-muted-foreground)]">
+                <span className="inline-flex items-center gap-2">
+                  <IconClock className="h-4 w-4" /> {program.duration}
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <IconLevel className="h-4 w-4" /> {program.level}
+                </span>
+                <span className="inline-flex items-center gap-2 text-[var(--color-accent)]">
+                  <IconStar className="h-4 w-4" /> {Number(program.rating).toFixed(1)} rating
+                </span>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {program.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full glass px-3 py-1 text-xs text-[var(--color-muted-foreground)]"
+                  >
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Pricing block */}
+            <aside className="h-fit rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 lg:sticky lg:top-24">
+              <p className="text-sm text-[var(--color-muted-foreground)]">Program fee</p>
+              <p className="mt-1 text-3xl font-bold text-[var(--color-foreground)]">
+                {formatINR(program.price_inr)}
+              </p>
+              <p className="mt-1 text-xs text-[var(--color-muted-foreground)]">
+                EMI options available · Scholarships for early applicants
+              </p>
+              <div className="mt-5">
+                <Button href={`/register?program=${program.slug}`} variant="accent" className="w-full">
+                  Register Interest
+                </Button>
+              </div>
+              <ul className="mt-6 space-y-2.5">
+                {program.outcomes.map((o) => (
+                  <li key={o} className="flex items-start gap-2 text-sm text-[var(--color-foreground)]/90">
+                    <IconCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-accent-2)]" />
+                    {o}
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl px-6 py-16">
+        <div className="grid gap-16 lg:grid-cols-[1.6fr_1fr]">
+          <div className="space-y-16">
+            {/* Curriculum */}
+            <section>
+              <h2 className="text-2xl font-bold">Curriculum</h2>
+              <div className="mt-6 space-y-3">
+                {program.syllabus.map((module, i) => (
+                  <Reveal
+                    key={module}
+                    delay={i * 50}
+                    className="flex items-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4"
+                  >
+                    <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary)]/15 text-sm font-bold text-[var(--color-primary)]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-medium text-[var(--color-foreground)]">{module}</span>
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+
+            {/* Projects */}
+            <section>
+              <h2 className="text-2xl font-bold">6 real-world projects</h2>
+              <p className="mt-2 text-[var(--color-muted-foreground)]">
+                Every project ships to your portfolio.
+              </p>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {program.projects.map((p, i) => (
+                  <Reveal
+                    key={p.title}
+                    delay={i * 50}
+                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 card-glow"
+                  >
+                    <div className="flex items-center gap-2 text-[var(--color-accent)]">
+                      <IconSparkle className="h-4 w-4" />
+                      <span className="text-xs font-semibold uppercase tracking-wide">
+                        Project {i + 1}
+                      </span>
+                    </div>
+                    <h3 className="mt-2 font-semibold text-[var(--color-foreground)]">{p.title}</h3>
+                    <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{p.desc}</p>
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+
+            {/* Mentors */}
+            <section>
+              <h2 className="text-2xl font-bold">Learn from mentors who&apos;ve done it</h2>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {program.mentors.map((m, i) => (
+                  <Reveal
+                    key={m.name}
+                    delay={i * 60}
+                    className="flex gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5"
+                  >
+                    <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full brand-gradient text-lg font-bold text-white">
+                      {m.name.charAt(0)}
+                    </span>
+                    <div>
+                      <h3 className="font-semibold text-[var(--color-foreground)]">{m.name}</h3>
+                      <p className="text-xs text-[var(--color-accent)]">{m.role}</p>
+                      <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{m.bio}</p>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Tools sidebar */}
+          <aside className="h-fit space-y-8 lg:sticky lg:top-24">
+            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6">
+              <h3 className="text-lg font-semibold text-[var(--color-foreground)]">Tools & technologies</h3>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {program.tools.map((tool) => (
+                  <span
+                    key={tool}
+                    className="rounded-lg glass px-3 py-1.5 text-sm text-[var(--color-foreground)]/90"
+                  >
+                    {tool}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl brand-gradient p-6">
+              <h3 className="text-lg font-semibold text-white">Ready to start?</h3>
+              <p className="mt-2 text-sm text-white/90">
+                Register your interest — no payment required at this stage.
+              </p>
+              <Button
+                href={`/register?program=${program.slug}`}
+                variant="invert"
+                className="mt-4 w-full"
+              >
+                Register Interest <IconArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </article>
+  );
+}

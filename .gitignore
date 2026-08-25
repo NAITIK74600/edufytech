@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# stray source assets (copies live in /public)
+/WhatsApp Video*.mp4
+/edufyi logo.jpg.jpeg
+/public/icons/*.original.png

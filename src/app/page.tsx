@@ -1,69 +1,387 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getFeaturedPrograms, getTestimonials, getCareerPaths, getSuccessStories } from "@/lib/db";
+import { ProgramCard } from "@/components/ProgramCard";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
+import { SectionHeading } from "@/components/SectionHeading";
+import { Reveal } from "@/components/Reveal";
+import { Marquee } from "@/components/Marquee";
+import { Button } from "@/components/Button";
+import { HeroHeadline } from "@/components/HeroHeadline";
+import { HeroStats } from "@/components/HeroStats";
+import { RoleCycler } from "@/components/RoleCycler";
+import { HeroPlacementTicker } from "@/components/HeroPlacementTicker";
+import { ScrollCue } from "@/components/ScrollCue";
+import { ScrollStory } from "@/components/ScrollStory";
+import { CareerSimulator } from "@/components/CareerSimulator";
+import { Spotlight } from "@/components/Spotlight";
+import { HeroVideo } from "@/components/HeroVideo";
+import { SectionNav } from "@/components/SectionNav";
+import {
+  IconArrowRight,
+  IconRocket,
+  IconUsers,
+  IconSparkle,
+  IconCheck,
+  IconBrain,
+} from "@/components/icons";
 
-export default function Home() {
+const navItems = [
+  { id: "hero", label: "Intro" },
+  { id: "journey", label: "Journey" },
+  { id: "paths", label: "Paths" },
+  { id: "programs", label: "Programs" },
+  { id: "services", label: "Services" },
+  { id: "careers", label: "Careers" },
+  { id: "testimonials", label: "Stories" },
+  { id: "cta", label: "Start" },
+];
+
+// Real alumni placements & credential partners, sourced from the live Edufyi site.
+const alumniCompanies = [
+  "Accenture", "Amazon", "Apple", "Capgemini", "Deloitte", "DXC Technology",
+  "HCL", "Infosys", "KPMG", "TCS", "Tech Mahindra", "Wipro",
+];
+const credentialPartners = [
+  "IBM", "Meta", "Apple", "Microsoft", "Adobe", "Unity", "Cisco",
+];
+const toolsTaught = [
+  "Android", "AutoCAD", "MATLAB", "MQTT", "Node.js", "Wireshark", "React.js", "Java", "Flask",
+];
+
+const paths = [
+  {
+    title: "I want to learn",
+    desc: "Master an in-demand tech skill with mentor-led, project-based programs.",
+    href: "/programs",
+    cta: "Explore Programs",
+    Icon: IconRocket,
+  },
+  {
+    title: "I want to get placed",
+    desc: "Build a real portfolio and get placement assistance into top companies.",
+    href: "/success-stories",
+    cta: "See Outcomes",
+    Icon: IconSparkle,
+  },
+  {
+    title: "I'm a college or company",
+    desc: "Partner with us for training, hiring, and collaborative programs.",
+    href: "/partners",
+    cta: "Partner With Us",
+    Icon: IconUsers,
+  },
+];
+
+const services = [
+  { title: "Immersive Training", desc: "Live, mentor-led programs built around real industry projects.", Icon: IconBrain },
+  { title: "Placement Assistance", desc: "Portfolio reviews, mock interviews, and hiring partner referrals.", Icon: IconRocket },
+  { title: "Tech Solutions", desc: "We build and consult on AI, data, and software for organizations.", Icon: IconSparkle },
+  { title: "Mentorship", desc: "1:1 guidance from engineers and leaders at top companies.", Icon: IconUsers },
+];
+
+export default async function Home() {
+  const [programs, testimonials, careerPaths, successStories] = await Promise.all([
+    getFeaturedPrograms(),
+    getTestimonials(),
+    getCareerPaths(),
+    getSuccessStories(),
+  ]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <SectionNav items={navItems} />
+
+      {/* ============ HERO ============ */}
+      <section id="hero" className="hero-dark relative overflow-hidden">
+        <HeroVideo />
+        <Spotlight />
+        <HeroPlacementTicker stories={successStories} />
+        <div className="relative mx-auto max-w-4xl px-6 pb-16 pt-20 text-center sm:pt-28 lg:pt-24">
+          {/* Editorial, centered hero copy — no filler visual panel */}
+          <div className="mx-auto flex flex-col items-center">
+            <Reveal trigger="mount">
+              <span className="shimmer inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-[var(--color-accent)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-accent-2)] opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-accent-2)]" />
+                </span>
+                Admissions open for the 2026 cohort
+              </span>
+            </Reveal>
+
+            <HeroHeadline />
+
+            <Reveal trigger="mount" delay={140}>
+              <RoleCycler />
+            </Reveal>
+
+            <Reveal trigger="mount" delay={220}>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--color-muted-foreground)]">
+                Immersive, mentor-led programs in AI/ML, Data Science, Cybersecurity,
+                and HR — engineered around real projects and real placement outcomes.
+              </p>
+            </Reveal>
+
+            <Reveal trigger="mount" delay={280}>
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+                <Button href="/programs" variant="invert" size="lg">
+                  Explore Programs <IconArrowRight className="h-4 w-4" />
+                </Button>
+                <Button href="/register" variant="outline-invert" size="lg">
+                  Register Interest
+                </Button>
+              </div>
+            </Reveal>
+
+            <Reveal trigger="mount" delay={400}>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[var(--color-muted-foreground)]">
+                {["Real-world projects", "Industry mentors", "Placement assistance"].map((f) => (
+                  <span key={f} className="inline-flex items-center gap-2">
+                    <IconCheck className="h-4 w-4 text-[var(--color-accent-2)]" /> {f}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Trust stats — inline data strip, not a boxed "stats card" */}
+          <HeroStats />
+
+          <ScrollCue className="mx-auto mt-14 hidden sm:flex" />
+        </div>
+      </section>
+
+      {/* ============ TRUST TICKER (moved up for immediate credibility) ============ */}
+      <section aria-label="Companies our alumni work at" className="border-y border-[var(--color-border)] bg-[var(--color-background-2)]/60 py-6">
+        <div className="mx-auto max-w-7xl px-6">
+          <p className="mb-4 text-center text-xs font-medium uppercase tracking-widest text-[var(--color-muted-foreground)]">
+            Our alumni now work at
           </p>
+          <Marquee items={alumniCompanies} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ============ SCROLL STORY (pinned scrollytelling) ============ */}
+      <section id="journey">
+        <ScrollStory />
+      </section>
+
+      {/* ============ PATH SELECTION (bento) ============ */}
+      <section id="paths" className="mx-auto max-w-7xl px-6 py-20">
+        <SectionHeading
+          index="02 / 08"
+          eyebrow="Choose your path"
+          title={<>Where do you want to go?</>}
+          subtitle="Tell us who you are and we'll point you to the right place."
+        />
+        <div className="mt-12 grid gap-6 md:grid-cols-2 md:grid-rows-2">
+          {paths.map((p, i) => (
+            <Reveal
+              key={p.title}
+              delay={i * 100}
+              className={`group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-8 card-glow ${
+                i === 0 ? "md:row-span-2 md:p-10" : ""
+              }`}
+            >
+              {i === 0 && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -bottom-10 -right-10 h-56 w-56 rounded-full bg-[var(--color-primary)]/10 blur-3xl"
+                />
+              )}
+              <span
+                className={`inline-flex items-center justify-center rounded-xl brand-gradient text-white ${
+                  i === 0 ? "h-14 w-14" : "h-12 w-12"
+                }`}
+              >
+                <p.Icon className={i === 0 ? "h-7 w-7" : "h-6 w-6"} />
+              </span>
+              <h3 className={`mt-5 font-semibold text-[var(--color-foreground)] ${i === 0 ? "text-2xl" : "text-xl"}`}>
+                {p.title}
+              </h3>
+              <p className={`mt-2 flex-1 text-[var(--color-muted-foreground)] ${i === 0 ? "max-w-sm text-base" : "text-sm"}`}>
+                {p.desc}
+              </p>
+              <Link
+                href={p.href}
+                data-cursor="Explore"
+                className="relative mt-5 inline-flex w-fit items-center gap-1 text-sm font-medium text-[var(--color-primary)] transition-transform group-hover:translate-x-1"
+              >
+                {p.cta} <IconArrowRight className="h-4 w-4" />
+              </Link>
+            </Reveal>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* ============ PROGRAMS ============ */}
+      <section id="programs" className="mx-auto max-w-7xl px-6 py-20">
+        <div className="flex flex-col items-end justify-between gap-6 sm:flex-row">
+          <SectionHeading
+            center={false}
+            index="03 / 08"
+            eyebrow="Flagship programs"
+            title={<>Programs built for outcomes</>}
+            subtitle="Four immersive tracks, each ending with a job-ready portfolio."
+          />
+          <Button href="/programs" variant="secondary">
+            View all <IconArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {programs.map((program, i) => (
+            <Reveal key={program.slug} delay={i * 80}>
+              <ProgramCard program={program} index={i} />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* ============ SERVICES (bento: one solid-ink feature banner + 3 cards — the
+           gradient is reserved for the final CTA only, per the "1 signature moment" rule) ============ */}
+      <section id="services" className="border-y border-[var(--color-border)] bg-[var(--color-background-2)]/50">
+        <div className="mx-auto max-w-7xl px-6 py-20">
+          <SectionHeading
+            index="04 / 08"
+            eyebrow="What we do"
+            title={<>More than a course — a launchpad</>}
+          />
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {services.map((s, i) =>
+              i === 0 ? (
+                <Reveal
+                  key={s.title}
+                  delay={0}
+                  className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[var(--color-foreground)] p-8 lg:col-span-3 lg:flex-row lg:items-center"
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-[var(--color-secondary)]/20 blur-3xl"
+                  />
+                  <div className="relative flex items-start gap-4">
+                    <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
+                      <s.Icon className="h-7 w-7" />
+                    </span>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white">{s.title}</h3>
+                      <p className="mt-1 max-w-md text-sm text-white/85">{s.desc}</p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/programs"
+                    data-cursor="View"
+                    className="relative mt-6 inline-flex w-fit items-center gap-1 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/25 lg:mt-0"
+                  >
+                    See programs <IconArrowRight className="h-4 w-4" />
+                  </Link>
+                </Reveal>
+              ) : (
+                <Reveal key={s.title} delay={i * 80} className="rounded-2xl glass p-6">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-primary)]/15 text-[var(--color-primary)]">
+                    <s.Icon className="h-5 w-5" />
+                  </span>
+                  <h3 className="mt-4 text-lg font-semibold text-[var(--color-foreground)]">{s.title}</h3>
+                  <p className="mt-2 text-sm text-[var(--color-muted-foreground)]">{s.desc}</p>
+                </Reveal>
+              )
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ CAREER PATH SIMULATOR (drag-driven trajectory scrubber,
+           replacing a static link-out list with a data-grounded interactive
+           feature) ============ */}
+      <section id="careers" className="mx-auto max-w-7xl px-6 py-20">
+        <SectionHeading
+          index="05 / 08"
+          eyebrow="Career paths"
+          title={<>Drag to see where each path leads</>}
+          subtitle="A real, data-backed trajectory — roles, industries, and growth stages for every domain we train."
+        />
+        <div className="mt-12">
+          <Reveal>
+            <CareerSimulator paths={careerPaths} />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============ TESTIMONIALS (draggable, snap-scroll carousel) ============ */}
+      <section id="testimonials" className="mx-auto max-w-7xl px-6 py-20">
+        <SectionHeading
+          index="06 / 08"
+          eyebrow="Success stories"
+          title={<>Careers, transformed</>}
+          subtitle="Real learners, real placements, real growth — drag or scroll to browse."
+        />
+        <div className="mt-12">
+          <TestimonialsCarousel items={testimonials} />
+        </div>
+      </section>
+
+      {/* ============ TRUST MARQUEES ============ */}
+      <section className="border-y border-[var(--color-border)] bg-[var(--color-background-2)]/50">
+        <div className="mx-auto max-w-7xl px-6 py-20">
+          <SectionHeading
+            center={false}
+            index="07 / 08"
+            eyebrow="Trusted & recognized"
+            title={<>Backed by credentials and the tools that matter</>}
+          />
+          <div className="mt-12 space-y-8">
+            <PartnerRow label="Credential Partners" items={credentialPartners} />
+            <PartnerRow label="Tools You'll Learn" items={toolsTaught} reverse />
+          </div>
+        </div>
+      </section>
+
+      {/* ============ FINAL CTA ============ */}
+      <section id="cta" className="mx-auto max-w-7xl px-6 py-24">
+        <div className="relative overflow-hidden rounded-3xl border border-[var(--color-border)] brand-gradient animate-gradient px-8 py-16 text-center">
+          <div aria-hidden className="absolute inset-0 bg-black/12" />
+          <div className="relative">
+            <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+              Your next chapter starts here
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-white/90">
+              Join the 2026 cohort. Register your interest today — no payment
+              required, just a conversation about your goals.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Button href="/register" variant="invert" size="lg">
+                Register Interest
+              </Button>
+              <Button href="/contact" variant="outline-invert" size="lg">
+                Talk to us
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function PartnerRow({
+  label,
+  items,
+  reverse,
+}: {
+  label: string;
+  items: string[];
+  reverse?: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
+      <div className="flex shrink-0 items-center gap-2.5 sm:w-44">
+        <span aria-hidden className="h-4 w-0.5 rounded-full bg-[var(--color-accent)]" />
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
+          {label}
+        </p>
+      </div>
+      <div className="min-w-0 flex-1">
+        <Marquee items={items} reverse={reverse} />
+      </div>
     </div>
   );
 }

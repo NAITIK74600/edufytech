@@ -1,26 +1,269 @@
 @import "tailwindcss";
 
+/* ============================================================
+   EDUFYI DESIGN SYSTEM — light, modern, professional, trustworthy
+   Brand personality: Modern · Trustworthy · Innovative · Professional
+   Clean · Future-Ready
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary brand blues */
+  --color-primary: #006bbf;
+  --color-primary-dark: #004d6b;
+  --color-primary-tint: #e8f4fb;      /* light hover/highlight fill */
+  --color-on-primary: #ffffff;
+
+  /* Secondary / gradient-end cyan — signature accent, used sparingly */
+  --color-secondary: #24c5db;
+
+  /* Accent — legible teal-blue for eyebrows/labels/small highlight text */
+  --color-accent: #04708f;
+  --color-accent-2: #16a34a;          /* success green — checkmarks, confirmations */
+
+  /* Neutrals */
+  --color-background: #ffffff;
+  --color-background-2: #f8fbfc;      /* alternating section tint */
+  --color-foreground: #102a36;        /* headings / primary text ("ink") */
+  --color-muted: #eef4f6;             /* chip / badge fills */
+  --color-muted-foreground: #607d89;  /* secondary text */
+  --color-border: #e6eef2;            /* dividers, card borders */
+  --color-card: #ffffff;
+
+  /* Semantic */
+  --color-destructive: #ef4444;
+  --color-warning: #f59e0b;
+  --color-ring: #006bbf;
+
+  --radius: 0.75rem;
+
+  /* Shadow scale (rgba base 16,42,54 per spec) */
+  --shadow-1: 0 2px 8px rgba(16, 42, 54, 0.06);
+  --shadow-2: 0 4px 24px rgba(16, 42, 54, 0.08);
+  --shadow-3: 0 16px 40px rgba(16, 42, 54, 0.1);
+  --shadow-4: 0 24px 60px rgba(16, 42, 54, 0.14);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-tint: var(--color-primary-tint);
+  --color-on-primary: var(--color-on-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-accent-2: var(--color-accent-2);
+  --color-background: var(--color-background);
+  --color-background-2: var(--color-background-2);
+  --color-foreground: var(--color-foreground);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+  --color-card: var(--color-card);
+  --color-destructive: var(--color-destructive);
+  --color-ring: var(--color-ring);
+  /* Plus Jakarta Sans for both headings and body, per brand spec */
+  --font-sans: var(--font-jakarta), Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-heading: var(--font-jakarta), Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  /* "Data voice" — mono, used only for indices/stats/labels (signature device) */
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  /* Lenis owns smooth-scroll physics in JS; CSS smooth-scroll would double up. */
+  scroll-behavior: auto;
+}
+
+/* Base element defaults live in Tailwind's own cascade layer so utility
+   classes (e.g. text-white on a heading over a dark section) can still
+   override them — unlayered CSS always beats @layer rules regardless of
+   source order, which was silently breaking every text-white heading. */
+@layer base {
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+    color: var(--color-foreground);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+a { color: inherit; text-decoration: none; }*:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
 }
+
+::selection {
+  background: rgba(0, 107, 191, 0.16);
+  color: var(--color-foreground);
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-background-2); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+  border-radius: 9999px;
+  border: 2px solid var(--color-background-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom cursor takes over the native pointer on precision (mouse) devices only */
+@media (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button {
+    cursor: none;
+  }
+}
+
+.cursor-fine-only { display: none; }
+@media (pointer: fine) {
+  .cursor-fine-only { display: contents; }
+}
+
+/* ---------- Typography utilities ---------- */
+/* The "data voice" — mono type reserved for indices, stats, and system labels */
+.data-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Hides scrollbar on the native-scroll testimonial track while keeping it
+   fully scrollable via touch/trackpad/keyboard (focus + arrow keys still work). */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Brand utilities ---------- */
+.brand-gradient {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.brand-gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft depth under gradient hero text — subtle, not a dark-mode glow */
+.text-glow {
+  filter: drop-shadow(0 6px 18px rgba(0, 107, 191, 0.18));
+}
+
+/* Frosted light glass — badges, nav-on-scroll, floating chips */
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-1);
+}
+
+/* Clean elevation lift on hover, replacing dark-mode glow shadows */
+.card-glow {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card-glow:hover {
+  transform: translateY(-6px);
+  border-color: rgba(0, 107, 191, 0.35);
+  box-shadow: var(--shadow-3);
+}
+
+/* Faint technical grid texture behind hero sections */
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(16, 42, 54, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 42, 54, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+/* A single light sweep that crosses a badge/pill once every few seconds —
+   used on the hero's "Admissions open" eyebrow for a subtle premium glint
+   instead of a plain static pill. Pure CSS (no JS) since it's decorative
+   and doesn't need to react to anything. */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+  background-size: 220% 100%;
+  animation: shimmer-sweep 5s ease-in-out infinite;
+}
+@keyframes shimmer-sweep {
+  0%, 20% { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
+
+/* ---------- Animations ---------- */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 30s linear infinite; }
+
+@keyframes gradient-pan {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-pan 8s ease infinite;
+}
+
+/* Dark surface context for the video hero: re-point the neutral tokens so every
+   child component (headings, muted text, borders, glass panels) adapts to a
+   dark background automatically, without editing each component. Brand colors
+   (primary/accent/secondary) are intentionally left as-is. */
+.hero-dark {
+  --color-foreground: #f4f8fa;
+  --color-muted-foreground: #b8c6ce;
+  --color-border: rgba(255, 255, 255, 0.16);
+  --color-card: #0d2531;
+}
+
