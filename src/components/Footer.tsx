@@ -46,11 +46,11 @@ export function Footer() {
         <div className="lg:col-span-2">
           <Link href="/" className="flex items-center gap-2 font-heading text-lg font-bold">
             <Image
-              src={withBase("/edufyi-logo.jpeg")}
+              src={withBase("/edufyi-logo.png")}
               alt="Edufyi Tech logo"
               width={36}
               height={36}
-              className="h-9 w-9 rounded-lg object-contain"
+              className="h-9 w-9 object-contain [filter:drop-shadow(0_0_10px_rgba(42,215,234,0.3))]"
             />
             Edufyi<span className="brand-gradient-text">Tech</span>
           </Link>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/Reveal";
 
 type Props = {
   eyebrow?: string;
@@ -21,7 +22,7 @@ export function SectionHeading({
     <div
       className={`${center ? "mx-auto text-center" : ""} max-w-2xl ${className}`}
     >
-      <div className={`flex items-center gap-3 ${center ? "justify-center" : ""}`}>
+      <Reveal as="div" className={`flex items-center gap-3 ${center ? "justify-center" : ""}`}>
         {index && (
           <span className="data-label text-[var(--color-muted-foreground)]">{index}</span>
         )}
@@ -30,14 +31,18 @@ export function SectionHeading({
             {eyebrow}
           </span>
         )}
-      </div>
-      <h2 className="mt-4 text-3xl font-bold sm:text-4xl md:text-[2.75rem] leading-[1.1]">
-        {title}
-      </h2>
+      </Reveal>
+      <Reveal as="div" delay={80}>
+        <h2 className="mt-4 text-3xl font-bold sm:text-4xl md:text-[2.75rem] leading-[1.1]">
+          {title}
+        </h2>
+      </Reveal>
       {subtitle && (
-        <p className="mt-4 text-base text-[var(--color-muted-foreground)] sm:text-lg">
-          {subtitle}
-        </p>
+        <Reveal as="div" delay={160}>
+          <p className="mt-4 text-base text-[var(--color-muted-foreground)] sm:text-lg">
+            {subtitle}
+          </p>
+        </Reveal>
       )}
     </div>
   );

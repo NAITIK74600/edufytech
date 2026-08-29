@@ -1,14 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
   useReducedMotion,
+  type MotionValue,
 } from "motion/react";
-import { Compass, Hammer, GraduationCap, Rocket } from "lucide-react";
+import { BrainCircuit, Compass, Hammer, GraduationCap, Rocket } from "lucide-react";
 import { withBase } from "@/lib/config";
 
 type Stage = {
@@ -18,7 +19,86 @@ type Stage = {
   accent: string;
   /** Full-bleed background image for this stage, shown at full color. */
   image: string;
+  /** When set, the background is a scroll-driven frame sequence instead of a static image. */
+  sequence?: { dir: string; frameCount: number };
 };
+
+// Scroll-driven frame sequence. The JPEG frames live in /public/<dir> named
+// ezgif-frame-001.jpg… and are drawn to a canvas, with the frame index mapped
+// to this stage's slice of the scroll timeline.
+const framePath = (dir: string, i: number) =>
+  withBase(`/${dir}/ezgif-frame-${String(i + 1).padStart(3, "0")}.jpg`);
+
+function FrameSequence({
+  progress,
+  dir,
+  frameCount,
+  active,
+}: {
+  progress: MotionValue<number>;
+  dir: string;
+  frameCount: number;
+  /** Preload/draw only while the stage is active or adjacent, to avoid a
+   *  large upfront payload when many sequences share one page. */
+  active: boolean;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const currentFrame = useRef(-1);
+  const loaded = useRef(false);
+
+  const draw = useCallback((index: number) => {
+    const canvas = canvasRef.current;
+    const img = imagesRef.current[index];
+    if (!canvas || !img || !img.complete || img.naturalWidth === 0) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+    }
+    // Cover fit: fill the canvas, cropping overflow, centered.
+    const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+    const dw = img.naturalWidth * scale;
+    const dh = img.naturalHeight * scale;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+    currentFrame.current = index;
+  }, []);
+
+  // Preload every frame the first time this stage becomes active/adjacent, so
+  // scrubbing is instant without loading all sequences up front.
+  useEffect(() => {
+    if (!active || loaded.current) return;
+    loaded.current = true;
+    const imgs: HTMLImageElement[] = [];
+    for (let i = 0; i < frameCount; i++) {
+      const img = new Image();
+      img.src = framePath(dir, i);
+      imgs.push(img);
+    }
+    imagesRef.current = imgs;
+    const first = () => draw(currentFrame.current < 0 ? 0 : currentFrame.current);
+    if (imgs[0].complete) first();
+    else imgs[0].onload = first;
+  }, [active, draw, dir, frameCount]);
+
+  useEffect(() => {
+    const onResize = () => draw(currentFrame.current < 0 ? 0 : currentFrame.current);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [draw]);
+
+  useMotionValueEvent(progress, "change", (v) => {
+    const index = Math.min(frameCount - 1, Math.max(0, Math.round(v * (frameCount - 1))));
+    if (index !== currentFrame.current) draw(index);
+  });
+
+  return <canvas ref={canvasRef} className="h-full w-full" />;
+}
 
 const stages: Stage[] = [
   {
@@ -27,6 +107,7 @@ const stages: Stage[] = [
     desc: "Explore AI/ML, Data Science, Cybersecurity, or HR — and find the domain that fits where you want to go.",
     accent: "#006bbf",
     image: "/icons/discover-path.png",
+    sequence: { dir: "discover-path", frameCount: 240 },
   },
   {
     Icon: Hammer,
@@ -34,6 +115,7 @@ const stages: Stage[] = [
     desc: "Six real-time and capstone projects per program. No filler theory — you ship things that work.",
     accent: "#24c5db",
     image: "/icons/learn-by-building.png",
+    sequence: { dir: "learn-building", frameCount: 40 },
   },
   {
     Icon: GraduationCap,
@@ -41,6 +123,15 @@ const stages: Stage[] = [
     desc: "1:1 guidance from engineers and leaders already doing the job you're training for.",
     accent: "#04708f",
     image: "/icons/get-mentored.png",
+    sequence: { dir: "get-mentored", frameCount: 240 },
+  },
+  {
+    Icon: BrainCircuit,
+    title: "Practice With AIRA",
+    desc: "Build confidence with AI-powered practice, mock interviews, instant feedback, and personalised support for every step of your career preparation.",
+    accent: "#2ad7ea",
+    image: "",
+    sequence: { dir: "aira-practice", frameCount: 218 },
   },
   {
     Icon: Rocket,
@@ -48,6 +139,7 @@ const stages: Stage[] = [
     desc: "Portfolio reviews, mock interviews, and warm introductions to our 120+ hiring partners.",
     accent: "#16a34a",
     image: "/icons/get-placed.png",
+    sequence: { dir: "get-placed", frameCount: 194 },
   },
 ];
 
@@ -64,6 +156,16 @@ export function ScrollStory() {
   });
 
   const railHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  // Scroll progress within each stage's own slice of the timeline (0 → 1),
+  // used to scrub that stage's frame sequence. stages is a fixed-length
+  // module constant, so calling the hook per stage keeps a stable hook order.
+  const n = stages.length;
+  /* eslint-disable react-hooks/rules-of-hooks */
+  const stageProgress = stages.map((_, i) =>
+    useTransform(scrollYProgress, [i / n, (i + 1) / n], [0, 1]),
+  );
+  /* eslint-enable react-hooks/rules-of-hooks */
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     const idx = Math.min(stages.length - 1, Math.max(0, Math.floor(v * stages.length)));
@@ -113,12 +215,25 @@ export function ScrollStory() {
             className="absolute inset-0"
             animate={{ opacity: active === i ? 1 : 0 }}
             transition={{ duration: 0.7, ease: EASE }}
-            style={{
-              backgroundImage: `url(${withBase(s.image)})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
+            style={
+              s.sequence || !s.image
+                ? { background: "#050c13" }
+                : {
+                    backgroundImage: `url(${withBase(s.image)})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+            }
+          >
+            {s.sequence && (
+              <FrameSequence
+                progress={stageProgress[i]}
+                dir={s.sequence.dir}
+                frameCount={s.sequence.frameCount}
+                active={Math.abs(active - i) <= 1}
+              />
+            )}
+          </motion.div>
         ))}
 
         {/* Directional scrim behind the copy only — fully opaque under the
@@ -127,12 +242,18 @@ export function ScrollStory() {
              illustration keeps its full, vivid color. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,10,14,0.97)_0%,rgba(4,10,14,0.94)_32%,rgba(4,10,14,0.55)_50%,rgba(4,10,14,0)_72%)]"
+          className="absolute inset-0 hidden lg:block bg-[linear-gradient(to_right,rgba(4,10,14,0.97)_0%,rgba(4,10,14,0.94)_32%,rgba(4,10,14,0.55)_50%,rgba(4,10,14,0)_72%)]"
+        />
+        {/* Mobile scrim: a mostly-dark vertical wash so the full-width copy
+             stays legible over the cropped frame on small screens. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 lg:hidden bg-[linear-gradient(to_top,rgba(4,10,14,0.94)_0%,rgba(4,10,14,0.72)_50%,rgba(4,10,14,0.62)_100%)]"
         />
         {/* Bottom fade so the mobile progress dots always sit on dark ground. */}
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent lg:hidden"
+          className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent lg:hidden"
         />
 
         <div className="relative mx-auto grid w-full max-w-5xl grid-cols-1 items-center gap-10 px-6 lg:pl-36 lg:pr-10">

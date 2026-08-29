@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getFeaturedPrograms, getTestimonials, getCareerPaths, getSuccessStories } from "@/lib/db";
+import { withBase } from "@/lib/config";
+import { getFeaturedPrograms, getTestimonials, getSuccessStories } from "@/lib/db";
 import { ProgramCard } from "@/components/ProgramCard";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -12,7 +13,6 @@ import { RoleCycler } from "@/components/RoleCycler";
 import { HeroPlacementTicker } from "@/components/HeroPlacementTicker";
 import { ScrollCue } from "@/components/ScrollCue";
 import { ScrollStory } from "@/components/ScrollStory";
-import { CareerSimulator } from "@/components/CareerSimulator";
 import { Spotlight } from "@/components/Spotlight";
 import { HeroVideo } from "@/components/HeroVideo";
 import { SectionNav } from "@/components/SectionNav";
@@ -22,7 +22,6 @@ import {
   IconUsers,
   IconSparkle,
   IconCheck,
-  IconBrain,
 } from "@/components/icons";
 
 const navItems = [
@@ -30,8 +29,7 @@ const navItems = [
   { id: "journey", label: "Journey" },
   { id: "paths", label: "Paths" },
   { id: "programs", label: "Programs" },
-  { id: "services", label: "Services" },
-  { id: "careers", label: "Careers" },
+  { id: "partners-network", label: "Partners" },
   { id: "testimonials", label: "Stories" },
   { id: "cta", label: "Start" },
 ];
@@ -41,8 +39,19 @@ const alumniCompanies = [
   "Accenture", "Amazon", "Apple", "Capgemini", "Deloitte", "DXC Technology",
   "HCL", "Infosys", "KPMG", "TCS", "Tech Mahindra", "Wipro",
 ];
-const credentialPartners = [
-  "IBM", "Meta", "Apple", "Microsoft", "Adobe", "Unity", "Cisco",
+const prestigiousPartners = [
+  { src: "/partners/airtel.jpg", alt: "Airtel" },
+  { src: "/partners/au.png", alt: "AU Small Finance Bank" },
+  { src: "/partners/aws.webp", alt: "Amazon Web Services" },
+  { src: "/partners/axis.png", alt: "Axis Bank" },
+  { src: "/partners/google-workspace.webp", alt: "Google Workspace" },
+  { src: "/partners/idfc-first-bank.webp", alt: "IDFC FIRST Bank" },
+  { src: "/partners/indusind.jpg", alt: "IndusInd Bank" },
+  { src: "/partners/jio.jpg", alt: "Jio" },
+  { src: "/partners/playo.webp", alt: "Playo" },
+  { src: "/partners/razorpay.png", alt: "Razorpay" },
+  { src: "/partners/vi.png", alt: "Vi" },
+  { src: "/partners/yes-bank.png", alt: "Yes Bank" },
 ];
 const toolsTaught = [
   "Android", "AutoCAD", "MATLAB", "MQTT", "Node.js", "Wireshark", "React.js", "Java", "Flask",
@@ -59,8 +68,8 @@ const paths = [
   {
     title: "I want to get placed",
     desc: "Build a real portfolio and get placement assistance into top companies.",
-    href: "/success-stories",
-    cta: "See Outcomes",
+    href: "/career-paths",
+    cta: "Explore Career Paths",
     Icon: IconSparkle,
   },
   {
@@ -72,18 +81,32 @@ const paths = [
   },
 ];
 
-const services = [
-  { title: "Immersive Training", desc: "Live, mentor-led programs built around real industry projects.", Icon: IconBrain },
-  { title: "Placement Assistance", desc: "Portfolio reviews, mock interviews, and hiring partner referrals.", Icon: IconRocket },
-  { title: "Tech Solutions", desc: "We build and consult on AI, data, and software for organizations.", Icon: IconSparkle },
-  { title: "Mentorship", desc: "1:1 guidance from engineers and leaders at top companies.", Icon: IconUsers },
+const partnerColleges = [
+  { src: "/partners-network/lpu.jpg", alt: "Lovely Professional University" },
+  { src: "/partners-network/galgotia-university.png", alt: "Galgotia University" },
+  { src: "/partners-network/sibm.png", alt: "SIBM" },
+  { src: "/partners-network/pune-business-school.png", alt: "Pune Business School" },
+  { src: "/partners-network/tecnia.jpg", alt: "Tecnia Institute" },
+  { src: "/partners-network/nsb.png", alt: "NSB Academy" },
+  { src: "/partners-network/jyothy.jpg", alt: "Jyothy Institute" },
+  { src: "/partners-network/vvism.webp", alt: "VVISM" },
+  { src: "/partners-network/fast.jpeg", alt: "FAST" },
+  { src: "/partners-network/tpg.png", alt: "TPG" },
+  { src: "/partners-network/atomxel.png", alt: "Atomxel" },
+];
+const govtApprovals = [
+  { src: "/govt-approvals/aicte.webp", alt: "AICTE" },
+  { src: "/govt-approvals/apsche.jpeg", alt: "APSCHE" },
+  { src: "/govt-approvals/dpiit.png", alt: "DPIIT — Startup India" },
+  { src: "/govt-approvals/mca.webp", alt: "Ministry of Corporate Affairs" },
+  { src: "/govt-approvals/msme.jpg", alt: "MSME" },
+  { src: "/govt-approvals/iso.jpg", alt: "ISO Certified" },
 ];
 
 export default async function Home() {
-  const [programs, testimonials, careerPaths, successStories] = await Promise.all([
+  const [programs, testimonials, successStories] = await Promise.all([
     getFeaturedPrograms(),
     getTestimonials(),
-    getCareerPaths(),
     getSuccessStories(),
   ]);
 
@@ -124,7 +147,7 @@ export default async function Home() {
 
             <Reveal trigger="mount" delay={280}>
               <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-                <Button href="/programs" variant="invert" size="lg">
+                <Button href="/programs" variant="accent" size="lg">
                   Explore Programs <IconArrowRight className="h-4 w-4" />
                 </Button>
                 <Button href="/register" variant="outline-invert" size="lg">
@@ -205,9 +228,9 @@ export default async function Home() {
               <Link
                 href={p.href}
                 data-cursor="Explore"
-                className="relative mt-5 inline-flex w-fit items-center gap-1 text-sm font-medium text-[var(--color-primary)] transition-transform group-hover:translate-x-1"
+                className="mt-5 inline-flex w-fit items-center gap-1 text-sm font-medium text-[var(--color-primary)] transition-transform group-hover:translate-x-1 after:absolute after:inset-0 after:z-10 after:content-['']"
               >
-                {p.cta} <IconArrowRight className="h-4 w-4" />
+                <span className="sr-only">{p.title}: </span>{p.cta} <IconArrowRight className="h-4 w-4" />
               </Link>
             </Reveal>
           ))}
@@ -222,97 +245,62 @@ export default async function Home() {
             index="03 / 08"
             eyebrow="Flagship programs"
             title={<>Programs built for outcomes</>}
-            subtitle="Four immersive tracks, each ending with a job-ready portfolio."
+            subtitle="Immersive tracks, each ending with a job-ready portfolio."
           />
           <Button href="/programs" variant="secondary">
             View all <IconArrowRight className="h-4 w-4" />
           </Button>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {programs.map((program, i) => (
             <Reveal key={program.slug} delay={i * 80}>
-              <ProgramCard program={program} index={i} />
+              <ProgramCard program={program} index={i} showPrice={false} />
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* ============ SERVICES (bento: one solid-ink feature banner + 3 cards — the
-           gradient is reserved for the final CTA only, per the "1 signature moment" rule) ============ */}
-      <section id="services" className="border-y border-[var(--color-border)] bg-[var(--color-background-2)]/50">
+      {/* ============ PARTNER COLLEGES & COMPANIES (logo wall) ============ */}
+      <section id="partners-network" className="border-y border-[var(--color-border)] bg-[var(--color-background-2)]/50">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <SectionHeading
             index="04 / 08"
-            eyebrow="What we do"
-            title={<>More than a course — a launchpad</>}
+            eyebrow="Our network"
+            title={<>Partner colleges &amp; companies</>}
+            subtitle="We train, upskill, and place talent with leading institutions and organizations across India."
           />
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {services.map((s, i) =>
-              i === 0 ? (
-                <Reveal
-                  key={s.title}
-                  delay={0}
-                  className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[var(--color-foreground)] p-8 lg:col-span-3 lg:flex-row lg:items-center"
-                >
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-[var(--color-secondary)]/20 blur-3xl"
-                  />
-                  <div className="relative flex items-start gap-4">
-                    <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
-                      <s.Icon className="h-7 w-7" />
-                    </span>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white">{s.title}</h3>
-                      <p className="mt-1 max-w-md text-sm text-white/85">{s.desc}</p>
-                    </div>
-                  </div>
-                  <Link
-                    href="/programs"
-                    data-cursor="View"
-                    className="relative mt-6 inline-flex w-fit items-center gap-1 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/25 lg:mt-0"
-                  >
-                    See programs <IconArrowRight className="h-4 w-4" />
-                  </Link>
-                </Reveal>
-              ) : (
-                <Reveal key={s.title} delay={i * 80} className="rounded-2xl glass p-6">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-primary)]/15 text-[var(--color-primary)]">
-                    <s.Icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold text-[var(--color-foreground)]">{s.title}</h3>
-                  <p className="mt-2 text-sm text-[var(--color-muted-foreground)]">{s.desc}</p>
-                </Reveal>
-              )
-            )}
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {partnerColleges.map((logo, i) => (
+              <Reveal
+                key={logo.src}
+                delay={i * 50}
+                className="flex items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/40 hover:shadow-[var(--shadow-2)]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={withBase(logo.src)}
+                  alt={logo.alt}
+                  className="h-14 w-auto max-w-full object-contain sm:h-16"
+                  loading="lazy"
+                />
+              </Reveal>
+            ))}
           </div>
-        </div>
-      </section>
-
-      {/* ============ CAREER PATH SIMULATOR (drag-driven trajectory scrubber,
-           replacing a static link-out list with a data-grounded interactive
-           feature) ============ */}
-      <section id="careers" className="mx-auto max-w-7xl px-6 py-20">
-        <SectionHeading
-          index="05 / 08"
-          eyebrow="Career paths"
-          title={<>Drag to see where each path leads</>}
-          subtitle="A real, data-backed trajectory — roles, industries, and growth stages for every domain we train."
-        />
-        <div className="mt-12">
-          <Reveal>
-            <CareerSimulator paths={careerPaths} />
-          </Reveal>
+          <div className="mt-10 text-center">
+            <Button href="/partners" variant="secondary">
+              Partner with us <IconArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* ============ TESTIMONIALS (draggable, snap-scroll carousel) ============ */}
       <section id="testimonials" className="mx-auto max-w-7xl px-6 py-20">
         <SectionHeading
-          index="06 / 08"
+          index="05 / 08"
           eyebrow="Success stories"
           title={<>Careers, transformed</>}
-          subtitle="Real learners, real placements, real growth — drag or scroll to browse."
+          subtitle="Real learners, real placements, real growth."
         />
         <div className="mt-12">
           <TestimonialsCarousel items={testimonials} />
@@ -324,12 +312,12 @@ export default async function Home() {
         <div className="mx-auto max-w-7xl px-6 py-20">
           <SectionHeading
             center={false}
-            index="07 / 08"
+            index="06 / 08"
             eyebrow="Trusted & recognized"
-            title={<>Backed by credentials and the tools that matter</>}
+            title={<>Backed by prestigious partners and the tools that matter</>}
           />
           <div className="mt-12 space-y-8">
-            <PartnerRow label="Credential Partners" items={credentialPartners} />
+            <PartnerRow label="Prestigious Partners" logos={prestigiousPartners} />
             <PartnerRow label="Tools You'll Learn" items={toolsTaught} reverse />
           </div>
         </div>
@@ -358,6 +346,38 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* ============ GOVERNMENT APPROVALS & RECOGNITIONS ============ */}
+      <section className="border-t border-[var(--color-border)] bg-[var(--color-background-2)]/50">
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs font-medium uppercase tracking-widest text-[var(--color-accent)]">
+              Recognized &amp; approved
+            </span>
+            <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Government approvals &amp; recognitions</h2>
+            <p className="mx-auto mt-3 max-w-xl text-[var(--color-muted-foreground)]">
+              Registered and recognized by leading government bodies and standards authorities.
+            </p>
+          </div>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            {govtApprovals.map((logo, i) => (
+              <Reveal
+                key={logo.src}
+                delay={i * 50}
+                className="flex items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-primary)]/40 hover:shadow-[var(--shadow-2)]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={withBase(logo.src)}
+                  alt={logo.alt}
+                  className="h-14 w-auto max-w-full object-contain sm:h-16"
+                  loading="lazy"
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }
@@ -365,10 +385,12 @@ export default async function Home() {
 function PartnerRow({
   label,
   items,
+  logos,
   reverse,
 }: {
   label: string;
-  items: string[];
+  items?: string[];
+  logos?: { src: string; alt: string }[];
   reverse?: boolean;
 }) {
   return (
@@ -380,7 +402,7 @@ function PartnerRow({
         </p>
       </div>
       <div className="min-w-0 flex-1">
-        <Marquee items={items} reverse={reverse} />
+        <Marquee items={items} logos={logos} reverse={reverse} />
       </div>
     </div>
   );

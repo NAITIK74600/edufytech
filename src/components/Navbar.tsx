@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { NAV_ITEMS, withBase, type NavItem } from "@/lib/config";
 import { IconMenu, IconClose, IconChevronDown } from "./icons";
+import { SHINY_BUTTON_CLASS } from "./ui/shiny-button";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -31,12 +32,12 @@ export function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2 font-heading text-lg font-bold">
           <Image
-            src={withBase("/edufyi-logo.jpeg")}
+            src={withBase("/edufyi-logo.png")}
             alt="Edufyi Tech logo"
             width={36}
             height={36}
             priority
-            className="h-9 w-9 rounded-lg object-contain"
+            className="h-9 w-9 object-contain [filter:drop-shadow(0_0_10px_rgba(42,215,234,0.35))]"
           />
           <span className="text-[var(--color-foreground)]">
             Edufyi<span className="brand-gradient-text">Tech</span>
@@ -72,7 +73,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/register"
-            className="rounded-xl bg-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-2)] transition-all hover:-translate-y-0.5 hover:bg-[var(--color-primary-dark)]"
+            className={`rounded-xl px-5 py-2.5 text-sm font-semibold ${SHINY_BUTTON_CLASS}`}
           >
             Register
           </Link>
@@ -148,7 +149,7 @@ export function Navbar() {
               <Link
                 href="/register"
                 onClick={() => setOpen(false)}
-                className="flex-1 rounded-xl bg-[var(--color-primary)] px-4 py-2.5 text-center text-sm font-semibold text-white"
+                className={`flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-semibold ${SHINY_BUTTON_CLASS}`}
               >
                 Register
               </Link>

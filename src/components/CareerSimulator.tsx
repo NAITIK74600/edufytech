@@ -60,7 +60,17 @@ const PATH_D = buildPathD();
  * static template wouldn't ship, because it's driven entirely by the site's
  * own data model.
  */
-export function CareerSimulator({ paths }: { paths: CareerPath[] }) {
+export function CareerSimulator({
+  paths,
+  showSelector = true,
+  footerLink = true,
+}: {
+  paths: CareerPath[];
+  /** Hide the domain switcher when the simulator is already scoped to one domain. */
+  showSelector?: boolean;
+  /** Hide the "see full details" link when already on a detail page. */
+  footerLink?: boolean;
+}) {
   const [domainIndex, setDomainIndex] = useState(0);
   const [stageIndex, setStageIndex] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -162,6 +172,7 @@ export function CareerSimulator({ paths }: { paths: CareerPath[] }) {
   return (
     <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 sm:p-8 lg:p-10">
       {/* Domain selector */}
+      {showSelector && (
       <div className="flex flex-wrap gap-2">
         {paths.map((p, i) => {
           const Icon = domainIcon[p.domain];
@@ -185,6 +196,7 @@ export function CareerSimulator({ paths }: { paths: CareerPath[] }) {
           );
         })}
       </div>
+      )}
 
       <p className="mt-4 max-w-lg text-sm text-[var(--color-muted-foreground)]">{active.tagline}</p>
 
@@ -339,6 +351,7 @@ export function CareerSimulator({ paths }: { paths: CareerPath[] }) {
         </div>
       </div>
 
+      {footerLink && (
       <div className="mt-8">
         <Link
           href="/career-paths"
@@ -348,6 +361,7 @@ export function CareerSimulator({ paths }: { paths: CareerPath[] }) {
           See full career path details <IconArrowRight className="h-4 w-4" />
         </Link>
       </div>
+      )}
     </div>
   );
 }

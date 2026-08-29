@@ -1,26 +1,26 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Magnetic } from "./Magnetic";
+import { SHINY_BUTTON_CLASS } from "./ui/shiny-button";
 
 type Variant = "primary" | "accent" | "secondary" | "ghost" | "invert" | "outline-invert";
 type Size = "sm" | "md" | "lg";
 
-// Matches the EduFyi Design System button spec:
-// Primary (solid #006BBF, hover #004D6B) · Accent (gradient, used sparingly for
-// hero/high-emphasis CTAs) · Secondary (white + blue outline) · Ghost (text link + arrow)
-// · Invert (solid white, for CTAs placed on top of a colored/gradient banner)
-// · Outline-invert (transparent + white outline, secondary CTA on a colored banner).
+// Matches the EduFyi "Abyssal" dark system button spec:
+// Primary & Accent share the premium 21st.dev "Shiny Button" treatment — an
+// azure→cyan gradient (logo ribbons) that slides on hover, with a cyan glow halo
+// and inset lighting for a tactile, high-end CTA. · Secondary (dark glass +
+// cyan-hover outline) · Ghost (text link + arrow) · Invert (solid white, for CTAs
+// on a gradient/photo banner) · Outline-invert (transparent + white outline).
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-[var(--color-primary)] text-white shadow-[var(--shadow-2)] hover:bg-[var(--color-primary-dark)] hover:shadow-[var(--shadow-3)]",
-  accent:
-    "brand-gradient text-white shadow-[var(--shadow-2)] hover:shadow-[var(--shadow-3)]",
+  primary: SHINY_BUTTON_CLASS,
+  accent: SHINY_BUTTON_CLASS,
   secondary:
-    "bg-white border-[1.5px] border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary-tint)]",
+    "glass text-[var(--color-foreground)] hover:border-[var(--color-secondary)]/60 hover:text-[var(--color-secondary)]",
   ghost:
-    "text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] px-0 py-0 hover:underline underline-offset-4",
+    "text-[var(--color-secondary)] hover:text-[var(--color-accent)] px-0 py-0 hover:underline underline-offset-4",
   invert:
-    "bg-white text-[var(--color-primary)] shadow-[var(--shadow-2)] hover:shadow-[var(--shadow-3)]",
+    "btn-tactile bg-white text-[#0b6f9e] hover:bg-[#eafaff]",
   "outline-invert":
     "border-[1.5px] border-white/70 text-white hover:bg-white/10 hover:border-white",
 };

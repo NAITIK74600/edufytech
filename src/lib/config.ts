@@ -12,6 +12,21 @@ export function formatINR(amount: number): string {
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 export const withBase = (path: string) => `${BASE_PATH}${path}`;
 
+// URL slug for a career-path domain, e.g. "AI/ML" → "ai-ml", "Data Science" → "data-science".
+export const careerPathSlug = (domain: string) =>
+  domain
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+// Related program slug for each career-path domain, used to link a path to its program.
+export const careerPathProgramSlug: Record<string, string> = {
+  "AI/ML": "ai-ml",
+  "Data Science": "data-science-ml",
+  Cybersecurity: "cybersecurity-essentials",
+  HR: "hr-management",
+};
+
 export const SITE = {
   name: "Edufyi Tech Solutions",
   shortName: "Edufyi",
@@ -62,11 +77,6 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/programs", label: "View all programs" },
     ],
   },
-  { href: "/career-paths", label: "Career Paths" },
-  { href: "/success-stories", label: "Success Stories" },
-  { href: "/partners", label: "For Colleges & Companies" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
   {
     label: "Software",
     children: [
@@ -74,4 +84,9 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/aira", label: "AIRA", badge: "Coming soon" },
     ],
   },
+  { href: "/partners", label: "Colleges & Companies" },
+  { href: "/career-paths", label: "Jobs" },
+  { href: "/success-stories", label: "Success Stories" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];

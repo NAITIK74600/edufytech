@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProgram, getPrograms } from "@/lib/db";
-import { formatINR } from "@/lib/config";
+import { getProgram, getPrograms, getCareerPaths } from "@/lib/db";
+import { formatINR, careerPathSlug } from "@/lib/config";
 import { Button } from "@/components/Button";
 import { Reveal } from "@/components/Reveal";
+import { CareerSimulator } from "@/components/CareerSimulator";
 import {
   IconStar,
   IconClock,
@@ -40,6 +41,11 @@ export default async function ProgramDetail({
   if (!program) notFound();
 
   const Icon = domainIcon[program.category] ?? IconSparkle;
+
+  // Career trajectory for this program's domain (only 4 domains have a mapped
+  // path — programs outside them simply don't render the slider).
+  const careerPaths = await getCareerPaths();
+  const careerPath = careerPaths.find((cp) => cp.domain === program.category) ?? null;
 
   return (
     <article>
@@ -224,6 +230,37 @@ export default async function ProgramDetail({
           </aside>
         </div>
       </div>
+
+      {/* Career trajectory for this program's domain */}
+      {careerPath && (
+        <section className="border-t border-[var(--color-border)] bg-[var(--color-background-2)]/40">
+          <div className="mx-auto max-w-7xl px-6 py-16">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent)]">
+                  Where this program leads
+                </span>
+                <h2 className="mt-2 text-2xl font-bold sm:text-3xl">
+                  Drag to see your {careerPath.domain} career path
+                </h2>
+                <p className="mt-2 max-w-xl text-[var(--color-muted-foreground)]">
+                  A real, data-backed trajectory — roles, industries, and growth stages for this domain.
+                </p>
+              </div>
+              <Link
+                href={`/career-paths/${careerPathSlug(careerPath.domain)}`}
+                data-cursor="View"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] transition-all hover:gap-3"
+              >
+                Full career path <IconArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <Reveal className="mt-8">
+              <CareerSimulator paths={[careerPath]} showSelector={false} footerLink={false} />
+            </Reveal>
+          </div>
+        </section>
+      )}
     </article>
   );
 }

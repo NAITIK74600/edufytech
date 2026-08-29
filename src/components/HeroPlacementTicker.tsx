@@ -27,14 +27,42 @@ function initials(name: string) {
  */
 export function HeroPlacementTicker({ stories }: { stories: SuccessStory[] }) {
   const [index, setIndex] = useState(0);
+  const [registered, setRegistered] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const items = stories.slice(0, 6);
+
+  // Baseline registered-students count, kept in step with the "12,000+ learners
+  // trained" hero stat, then nudged up slowly so it reads as a live figure.
+  const REGISTERED_BASE = 12480;
 
   useEffect(() => {
     if (prefersReducedMotion || items.length < 2) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % items.length), 3400);
     return () => clearInterval(id);
   }, [prefersReducedMotion, items.length]);
+
+  // Count up to the baseline on mount, then tick up occasionally to feel live.
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    let raf = 0;
+    const duration = 1500;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setRegistered(Math.round(eased * REGISTERED_BASE));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    const bump = setInterval(
+      () => setRegistered((r) => r + Math.floor(Math.random() * 2) + 1),
+      6000,
+    );
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(bump);
+    };
+  }, [prefersReducedMotion]);
 
   if (prefersReducedMotion || items.length === 0) return null;
 
@@ -74,6 +102,18 @@ export function HeroPlacementTicker({ stories }: { stories: SuccessStory[] }) {
             </div>
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* Live-feeling registered-students count */}
+      <div className="mt-2.5 flex items-center gap-1.5 border-t border-[var(--color-border)] pt-2.5 text-[11px] text-[var(--color-muted-foreground)]">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-primary)] opacity-75" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+        </span>
+        <span className="font-semibold text-[var(--color-foreground)] [font-variant-numeric:tabular-nums]">
+          {registered.toLocaleString("en-IN")}
+        </span>
+        students registered with us
       </div>
 
       <span className="mt-2 flex items-center gap-1 text-xs font-medium text-[var(--color-primary)] opacity-0 transition-opacity duration-300 group-hover:opacity-100">

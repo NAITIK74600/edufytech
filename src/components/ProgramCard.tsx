@@ -9,7 +9,15 @@ import {
   IconSparkle,
 } from "./icons";
 
-export function ProgramCard({ program, index = 0 }: { program: Program; index?: number }) {
+export function ProgramCard({
+  program,
+  index = 0,
+  showPrice = true,
+}: {
+  program: Program;
+  index?: number;
+  showPrice?: boolean;
+}) {
   const Icon = domainIcon[program.category] ?? IconSparkle;
   return (
     <Link
@@ -62,12 +70,16 @@ export function ProgramCard({ program, index = 0 }: { program: Program; index?: 
       </div>
 
       <div className="relative flex items-center justify-between px-6 py-5">
-        <div>
-          <p className="text-[10px] uppercase tracking-widest text-[var(--color-muted-foreground)]">
-            Program fee
-          </p>
-          <p className="text-lg font-bold text-[var(--color-foreground)]">{formatINR(program.price_inr)}</p>
-        </div>
+        {showPrice ? (
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-[var(--color-muted-foreground)]">
+              Program fee
+            </p>
+            <p className="text-lg font-bold text-[var(--color-foreground)]">{formatINR(program.price_inr)}</p>
+          </div>
+        ) : (
+          <span className="text-sm font-semibold text-[var(--color-foreground)]">View program</span>
+        )}
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-primary)]/10 px-3.5 py-2 text-xs font-semibold text-[var(--color-primary)] transition-all group-hover:bg-[var(--color-primary)] group-hover:text-white">
           Explore <IconArrowRight className="h-3.5 w-3.5" />
         </span>

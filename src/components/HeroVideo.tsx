@@ -31,9 +31,17 @@ export function HeroVideo() {
 
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden">
+      {/* Blurred, scaled backdrop of the same frame — fills the letterbox area
+          so the contained video never leaves a hard dark gap. Decorative only. */}
+      <div
+        className="absolute inset-0 scale-110 bg-cover bg-center blur-2xl saturate-125 opacity-45"
+        style={{ backgroundImage: `url(${withBase("/video/edufy-story-poster.jpg")})` }}
+      />
+      {/* Crisp frame — fills the hero on mobile (portrait) to avoid an awkward
+          letterbox, and shows the full uncropped frame on large screens. */}
       <video
         ref={videoRef}
-        className="h-full w-full object-cover"
+        className="relative h-full w-full object-cover lg:object-contain"
         width={848}
         height={478}
         autoPlay={!prefersReducedMotion}
@@ -41,9 +49,9 @@ export function HeroVideo() {
         loop
         playsInline
         preload="metadata"
-        poster={withBase("/video/edufy-showcase-poster.jpg")}
+        poster={withBase("/video/edufy-story-poster.jpg")}
       >
-        <source src={withBase("/video/edufy-showcase.mp4")} type="video/mp4" />
+        <source src={withBase("/video/edufy-story.mp4")} type="video/mp4" />
       </video>
 
       {/* Legibility scrim + brand tint */}

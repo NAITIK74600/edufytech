@@ -13,6 +13,12 @@ import { IconStar, IconArrowRight } from "./icons";
 export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const activeRef = useRef(0);
+
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -27,13 +33,29 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
     return () => track.removeEventListener("scroll", onScroll);
   }, [items.length]);
 
+  // Auto-advance the carousel, looping back to the start. A single stable
+  // interval (not re-created on every scroll) reads the latest index from a
+  // ref. Pauses on hover/focus/touch, when the tab is hidden, or reduced motion.
+  useEffect(() => {
+    if (items.length <= 1 || paused) return;
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      const track = trackRef.current;
+      if (!track || document.hidden) return;
+      const next = (activeRef.current + 1) % items.length;
+      const card = track.children[next] as HTMLElement | undefined;
+      if (card) track.scrollTo({ left: card.offsetLeft, behavior: "smooth" });
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, [items.length, paused]);
+
   function scrollToIndex(idx: number) {
     const track = trackRef.current;
     if (!track) return;
     const card = track.children[idx] as HTMLElement | undefined;
     if (!card) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    track.scrollTo({ left: card.offsetLeft - 4, behavior: reduced ? "auto" : "smooth" });
+    track.scrollTo({ left: card.offsetLeft, behavior: reduced ? "auto" : "smooth" });
   }
 
   return (
@@ -45,11 +67,18 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
         role="region"
         aria-label="Testimonials, scroll horizontally to browse"
         tabIndex={0}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+        onTouchStart={() => setPaused(true)}
       >
-        {items.map((t) => (
+        {items.map((t, i) => (
           <article
             key={t.name}
-            className="flex w-[85%] shrink-0 snap-center flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-7 shadow-[var(--shadow-1)] sm:w-[60%] lg:w-[calc(33.333%-1rem)]"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            className={`flex w-[85%] shrink-0 snap-start flex-col rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-7 shadow-[var(--shadow-1)] transition-all duration-500 ease-out sm:w-[60%] lg:w-[calc(33.333%-1rem)] ${
+              active === i ? "opacity-100" : "opacity-70"
+            }`}
           >
             <div className="flex gap-0.5 text-[var(--color-accent)]">
               {Array.from({ length: t.rating }).map((_, s) => (

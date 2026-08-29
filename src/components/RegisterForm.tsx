@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Program } from "@/lib/types";
 import { inputClass, Field, FormStatus } from "./form";
+import { SHINY_BUTTON_CLASS } from "./ui/shiny-button";
 import { formatINR } from "@/lib/config";
 
 type State = "idle" | "loading" | "success" | "error";
@@ -165,7 +166,7 @@ export function RegisterForm({ programs }: { programs: Program[] }) {
       <button
         type="submit"
         disabled={state === "loading"}
-        className="w-full cursor-pointer rounded-xl brand-gradient px-6 py-3.5 font-semibold text-white shadow-[var(--shadow-2)] transition-all hover:shadow-[var(--shadow-3)] hover:-translate-y-0.5 disabled:opacity-60"
+        className={`w-full cursor-pointer rounded-xl px-6 py-3.5 font-semibold ${SHINY_BUTTON_CLASS} disabled:opacity-60`}
       >
         {state === "loading" ? "Submitting…" : "Register Interest"}
       </button>
