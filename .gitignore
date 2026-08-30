@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# docs / agent instructions (not required for hosting)
+*.md
+/docs/
+/scripts/
+/.github/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
