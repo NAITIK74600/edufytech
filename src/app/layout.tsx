@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { AiraChat } from "@/components/AiraChat";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex-1 pt-16">{children}</main>
         <Footer />
         <WhatsAppFloat />
+        <AiraChat />
       </body>
     </html>
   );

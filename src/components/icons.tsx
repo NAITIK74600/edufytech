@@ -103,9 +103,171 @@ export const IconChevronDown = (p: IconProps) => (
   <svg {...base} {...p}><path d="m6 9 6 6 6-6"/></svg>
 );
 
+export const IconBot = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="4" y="9" width="16" height="11" rx="3"/><path d="M12 9V5"/><circle cx="12" cy="4" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="1.2" fill="currentColor" stroke="none"/><path d="M2 13v3M22 13v3"/></svg>
+);
+
+export const IconSend = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+);
+
+export const IconMinus = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M5 12h14"/></svg>
+);
+
+export const IconCode = (p: IconProps) => (
+  <svg {...base} {...p}><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13 5-2 14"/></svg>
+);
+
+export const IconCloud = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M17.5 19a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.4-1.5A5 5 0 0 0 6.5 19h11Z"/></svg>
+);
+
+export const IconPenTool = (p: IconProps) => (
+  <svg {...base} {...p}><path d="m12 19 7-7 3 3-7 7-3-3Z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+);
+
+export const IconMobile = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
+);
+
+export const IconCpu = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="6" y="6" width="12" height="12" rx="1"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>
+);
+
+export const IconBriefcase = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+);
+
+export const IconPulse = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+);
+
+export const IconCompass = (p: IconProps) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-6 2 2-6 6-2Z"/></svg>
+);
+
+export const IconCoins = (p: IconProps) => (
+  <svg {...base} {...p}><circle cx="9" cy="9" r="6"/><path d="M14.5 8a6 6 0 1 1 0 8.5"/><path d="M9 7v4M7 9h4" strokeWidth="1.5"/></svg>
+);
+
+export const IconAtom = (p: IconProps) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="9" ry="4"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(120 12 12)"/></svg>
+);
+
+export const IconMegaphone = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M3 11v3a1 1 0 0 0 1 1h1l2 6h2l-1-6h5l7 4V6l-7 4H4a1 1 0 0 0-1 1Z"/></svg>
+);
+
+/* ---------- Extra glyphs, one per program, so cards in a shared category
+   (e.g. the six "Science & Research" programs) still read as distinct
+   subjects rather than repeating the same watermark. ---------- */
+
+export const IconNetwork = (p: IconProps) => (
+  <svg {...base} {...p}><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><path d="M6.7 7.3 10.5 11M17.3 7.3 13.5 11M6.7 16.7l3.8-3.7M17.3 16.7l-3.8-3.7"/></svg>
+);
+
+export const IconBarChart = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M4 20V12M10 20V4M16 20v-6M22 20H2"/></svg>
+);
+
+export const IconBattery = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 10v4"/><path d="M6 10v4"/></svg>
+);
+
+export const IconRobot = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="5" y="9" width="14" height="10" rx="2"/><circle cx="9.5" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14" r="1" fill="currentColor" stroke="none"/><path d="M12 9V5M9 5h6M3 12v3M21 12v3"/></svg>
+);
+
+export const IconCircuit = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M4 6h6v6H4zM4 12v6h5"/><circle cx="17" cy="7" r="2"/><path d="M17 9v3h-5M4 3v3M20 12h-3"/></svg>
+);
+
+export const IconClipboard = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M8 12h8M8 16h5"/></svg>
+);
+
+export const IconFlag = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M5 21V4"/><path d="M5 4h13l-3 4 3 4H5"/></svg>
+);
+
+export const IconStethoscope = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M5 3v6a4 4 0 0 0 8 0V3"/><path d="M9 13v2a5 5 0 0 0 10 0v-2.5"/><circle cx="19" cy="8.5" r="2"/></svg>
+);
+
+export const IconBuilding = (p: IconProps) => (
+  <svg {...base} {...p}><rect x="4" y="3" width="10" height="18"/><path d="M14 8h6v13h-6M7 7h.01M11 7h.01M7 11h.01M11 11h.01M7 15h.01M11 15h.01"/></svg>
+);
+
+export const IconDollar = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3.5-5-3.5s-5 1.6-5 3.5S9.2 10 12 10s5 1.6 5 3.5-2.2 3.5-5 3.5-5-1.6-5-3.5"/></svg>
+);
+
+export const IconTrendingUp = (p: IconProps) => (
+  <svg {...base} {...p}><path d="m3 17 6-6 4 4 8-8"/><path d="M15 6h6v6"/></svg>
+);
+
+export const IconDna = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M7 3c0 5 10 5 10 10s-10 5-10 10"/><path d="M17 3c0 5-10 5-10 10s10 5 10 10"/><path d="M8 7h8M7.5 12h9M8 17h8"/></svg>
+);
+
+export const IconFlask = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M9 2h6M10 2v6l-6 11a2 2 0 0 0 1.8 3h12.4a2 2 0 0 0 1.8-3L14 8V2"/><path d="M8 15h8"/></svg>
+);
+
+export const IconHeadCircuit = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M9 3a6 6 0 0 0-6 6c0 2 1 3 1 5v3h10v-3c0-1 1-2 1-4a6 6 0 0 0-1-3"/><path d="M9 17v3M13 17v3"/><path d="M7 9h1M11 9h1M9 9v3"/></svg>
+);
+
+export const IconMicroscope = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M6 21h12"/><path d="M9 21v-4a3 3 0 0 1 3-3 3 3 0 0 0 3-3"/><path d="M9 8a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z" transform="rotate(45 12 8)"/><path d="M13.5 3.5 17 7"/></svg>
+);
+
+export const IconBarcode = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M4 4v16M8 4v16M11 4v16M15 4v16M17 4v16M21 4v16" strokeWidth="1.6"/></svg>
+);
+
+export const IconPalette = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2H17a4 4 0 0 0 4-4c0-4.4-4-7.4-9-7.4Z"/><circle cx="7.5" cy="10.5" r="1" fill="currentColor" stroke="none"/><circle cx="11" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1" fill="currentColor" stroke="none"/></svg>
+);
+
 export const domainIcon: Record<string, (p: IconProps) => React.JSX.Element> = {
   "AI/ML": IconBrain,
   "Data Science": IconChart,
   Cybersecurity: IconShield,
   HR: IconUsers,
+  "Web Development": IconCode,
+  "Cloud & Infrastructure": IconCloud,
+  Design: IconPalette,
+  Mobile: IconMobile,
+  "Electronics & Hardware": IconCpu,
+  "Business & Management": IconBriefcase,
+  Healthcare: IconPulse,
+  "Engineering & Design": IconCompass,
+  Finance: IconCoins,
+  "Science & Research": IconAtom,
+  Marketing: IconMegaphone,
+};
+
+/* Per-program glyph overrides — keyed by slug so programs sharing a broad
+   category (Electronics & Hardware, Science & Research, Finance...) still
+   get a watermark that reads as their own subject, not a repeated stock icon. */
+export const programIcon: Record<string, (p: IconProps) => React.JSX.Element> = {
+  "machine-learning": IconNetwork,
+  "data-analytics": IconBarChart,
+  "hybrid-electric-vehicle": IconBattery,
+  "iot-robotics": IconRobot,
+  "vlsi": IconCpu,
+  "embedded-systems": IconCircuit,
+  "business-analyst": IconClipboard,
+  "product-management": IconFlag,
+  "medical-coding": IconStethoscope,
+  "construction-planning": IconBuilding,
+  "finance": IconDollar,
+  "stock-marketing": IconTrendingUp,
+  "biotechnology": IconDna,
+  "genetic-engineering": IconFlask,
+  "psychology-workshop": IconHeadCircuit,
+  "microbiology": IconMicroscope,
+  "bioinformatics": IconBarcode,
 };

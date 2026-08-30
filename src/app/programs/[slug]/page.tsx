@@ -13,6 +13,7 @@ import {
   IconCheck,
   IconArrowRight,
   domainIcon,
+  programIcon,
   IconSparkle,
 } from "@/components/icons";
 
@@ -40,7 +41,7 @@ export default async function ProgramDetail({
   const program = await getProgram(slug);
   if (!program) notFound();
 
-  const Icon = domainIcon[program.category] ?? IconSparkle;
+  const Icon = programIcon[program.slug] ?? domainIcon[program.category] ?? IconSparkle;
 
   // Career trajectory for this program's domain (only 4 domains have a mapped
   // path — programs outside them simply don't render the slider).

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
-import { inputClass } from "@/components/form";
+import { LoginForm } from "@/components/LoginForm";
 import { IconSparkle } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -28,33 +29,9 @@ export default function LoginPage() {
             Log in to access your program dashboard.
           </p>
 
-          {/* Auth is Phase 2 via a hosted provider (Supabase/Clerk). This is a UI shell. */}
-          <form className="mt-8 space-y-4" aria-label="Login form (demo shell)">
-            <div>
-              <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-[var(--color-foreground)]/90">
-                Email
-              </label>
-              <input id="email" type="email" className={inputClass} placeholder="you@email.com" />
-            </div>
-            <div>
-              <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-[var(--color-foreground)]/90">
-                Password
-              </label>
-              <input id="password" type="password" className={inputClass} placeholder="••••••••" />
-            </div>
-            <button
-              type="button"
-              disabled
-              title="Authentication launches in Phase 2 via a hosted provider"
-              className="w-full cursor-not-allowed rounded-xl bg-[var(--color-primary)] px-6 py-3.5 font-semibold text-white opacity-70"
-            >
-              Log In
-            </button>
-          </form>
-
-          <p className="mt-4 rounded-xl bg-[var(--color-muted)] px-4 py-3 text-center text-xs text-[var(--color-muted-foreground)]">
-            Secure login launches in Phase 2 via a hosted provider (Supabase/Clerk).
-          </p>
+          <Suspense fallback={null}>
+            <LoginForm />
+          </Suspense>
 
           <p className="mt-6 text-center text-sm text-[var(--color-muted-foreground)]">
             New here?{" "}
@@ -67,3 +44,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

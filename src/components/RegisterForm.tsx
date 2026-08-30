@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Program } from "@/lib/types";
 import { inputClass, Field, FormStatus } from "./form";
 import { SHINY_BUTTON_CLASS } from "./ui/shiny-button";
@@ -9,16 +10,19 @@ import { formatINR } from "@/lib/config";
 type State = "idle" | "loading" | "success" | "error";
 
 export function RegisterForm({ programs }: { programs: Program[] }) {
+  const router = useRouter();
   const [form, setForm] = useState({
     program_slug: programs[0]?.slug ?? "",
     full_name: "",
     email: "",
     phone: "",
+    password: "",
     discount_code: "",
     message: "",
   });
   const [state, setState] = useState<State>("idle");
   const [msg, setMsg] = useState("");
+  const [accountCreated, setAccountCreated] = useState(false);
 
   // Prefill the program from a ?program=<slug> query param (client-side, so the
   // page stays statically exportable). One-time read from the URL on mount.
@@ -52,6 +56,7 @@ export function RegisterForm({ programs }: { programs: Program[] }) {
         return;
       }
       setState("success");
+      setAccountCreated(Boolean(data.accountCreated));
       setMsg(
         data.message ??
           "Thank you! Our team will reach out shortly to help you enroll."
@@ -61,9 +66,13 @@ export function RegisterForm({ programs }: { programs: Program[] }) {
         full_name: "",
         email: "",
         phone: "",
+        password: "",
         discount_code: "",
         message: "",
       }));
+      if (data.accountCreated) {
+        router.refresh(); // picks up the session cookie set by the API route
+      }
     } catch {
       setState("error");
       setMsg("Network error. Please try again.");
@@ -140,6 +149,26 @@ export function RegisterForm({ programs }: { programs: Program[] }) {
         />
       </Field>
 
+      <Field
+        label="Create a password"
+        htmlFor="password"
+        required
+        hint="At least 8 characters — you'll use this to log in and track your registration."
+      >
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          minLength={8}
+          value={form.password}
+          onChange={(e) => update("password", e.target.value)}
+          required
+          className={inputClass}
+          placeholder="••••••••"
+        />
+      </Field>
+
       <Field label="Discount code" htmlFor="discount_code" hint="Optional — applied at payment (Phase 2).">
         <input
           id="discount_code"
@@ -162,6 +191,16 @@ export function RegisterForm({ programs }: { programs: Program[] }) {
       </Field>
 
       <FormStatus state={state} message={msg} />
+
+      {state === "success" && accountCreated && (
+        <button
+          type="button"
+          onClick={() => router.push("/dashboard")}
+          className="w-full rounded-xl border border-[var(--color-border)] px-6 py-3 text-sm font-semibold text-[var(--color-primary)] transition-colors hover:border-[var(--color-primary)]/50"
+        >
+          Go to your dashboard →
+        </button>
+      )}
 
       <button
         type="submit"

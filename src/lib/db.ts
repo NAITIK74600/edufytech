@@ -108,3 +108,42 @@ export async function insertB2BLead(data: {
   await sql`INSERT INTO b2b_leads (org_name, org_type, contact_name, email, phone, interest, message)
     VALUES (${data.org_name}, ${data.org_type}, ${data.contact_name}, ${data.email}, ${data.phone ?? null}, ${data.interest ?? null}, ${data.message})`;
 }
+
+// ---------------------------------------------------------------------------
+// Accounts — real login/registration backend (see src/lib/auth.ts for the
+// password hashing + session token helpers used alongside these).
+// ---------------------------------------------------------------------------
+export type UserRecord = {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+  password_hash: string;
+  created_at: string;
+};
+
+export async function getUserByEmail(email: string): Promise<UserRecord | null> {
+  if (!sql) throw new Error("DATABASE_NOT_CONFIGURED");
+  const rows = (await sql`SELECT * FROM users WHERE lower(email) = lower(${email}) LIMIT 1`) as UserRecord[];
+  return rows[0] ?? null;
+}
+
+export async function getUserById(id: string): Promise<UserRecord | null> {
+  if (!sql) throw new Error("DATABASE_NOT_CONFIGURED");
+  const rows = (await sql`SELECT * FROM users WHERE id = ${id} LIMIT 1`) as UserRecord[];
+  return rows[0] ?? null;
+}
+
+export async function createUser(data: {
+  full_name: string;
+  email: string;
+  phone?: string;
+  password_hash: string;
+}): Promise<UserRecord> {
+  if (!sql) throw new Error("DATABASE_NOT_CONFIGURED");
+  const rows = (await sql`INSERT INTO users (full_name, email, phone, password_hash)
+    VALUES (${data.full_name}, ${data.email}, ${data.phone ?? null}, ${data.password_hash})
+    RETURNING *`) as UserRecord[];
+  return rows[0];
+}
+

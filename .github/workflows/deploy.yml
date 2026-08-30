@@ -1,8 +1,14 @@
 name: Deploy to GitHub Pages
 
+# NOTE: This app now has a real backend (login/registration/lead-capture API
+# routes + src/proxy.ts session gate — see next.config.ts). GitHub Pages only
+# serves static files and cannot run any of that, so this workflow can no
+# longer auto-deploy on every push — `npm run build` will fail the moment it
+# hits a dynamic route handler while output:"export" is set. Left here as
+# workflow_dispatch only in case a future static-only snapshot is needed;
+# migrate hosting to a Node.js-capable platform (e.g. Vercel) to restore a
+# working live deployment with the backend intact.
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 permissions:

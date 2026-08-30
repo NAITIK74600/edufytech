@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth";
 import { Button } from "@/components/Button";
+import { LogoutButton } from "@/components/LogoutButton";
 import { IconRocket, IconBrain, IconCheck, IconSparkle } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -7,21 +11,30 @@ export const metadata: Metadata = {
   description: "Your Edufyi Tech Solutions learning dashboard.",
 };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const jar = await cookies();
+  const session = verifySessionToken(jar.get(SESSION_COOKIE_NAME)?.value);
+  // proxy.ts already redirects unauthenticated requests to /login before this
+  // renders, but a server-side check here keeps the page safe on its own too.
+  if (!session) redirect("/login?next=/dashboard");
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">
-            Welcome back, <span className="brand-gradient-text">Learner</span>
+            Welcome back, <span className="brand-gradient-text">{session.fullName.split(" ")[0]}</span>
           </h1>
           <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">
             Here&apos;s your program at a glance.
           </p>
         </div>
-        <Button href="/programs" variant="secondary">
-          Browse programs
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button href="/programs" variant="secondary">
+            Browse programs
+          </Button>
+          <LogoutButton />
+        </div>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-3">
@@ -32,8 +45,8 @@ export default function DashboardPage() {
               <IconBrain className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="font-semibold text-[var(--color-foreground)]">AI & Machine Learning</h2>
-              <p className="text-xs text-[var(--color-muted-foreground)]">24 weeks · Cohort 2026</p>
+              <h2 className="font-semibold text-[var(--color-foreground)]">Your registrations</h2>
+              <p className="text-xs text-[var(--color-muted-foreground)]">Cohort 2026</p>
             </div>
           </div>
           <div className="mt-6">
@@ -67,11 +80,11 @@ export default function DashboardPage() {
           <h2 className="font-semibold text-[var(--color-foreground)]">Your profile</h2>
           <div className="mt-4 flex items-center gap-3">
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-full brand-gradient text-lg font-bold text-white">
-              L
+              {session.fullName.charAt(0).toUpperCase()}
             </span>
             <div>
-              <div className="font-medium text-[var(--color-foreground)]">Learner</div>
-              <div className="text-xs text-[var(--color-muted-foreground)]">learner@email.com</div>
+              <div className="font-medium text-[var(--color-foreground)]">{session.fullName}</div>
+              <div className="text-xs text-[var(--color-muted-foreground)]">{session.email}</div>
             </div>
           </div>
           <dl className="mt-6 space-y-3 text-sm">
@@ -103,3 +116,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
