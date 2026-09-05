@@ -45,6 +45,10 @@ export const IconArrowRight = (p: IconProps) => (
   <svg {...base} {...p}><path d="M5 12h14M13 5l7 7-7 7"/></svg>
 );
 
+export const IconDownload = (p: IconProps) => (
+  <svg {...base} {...p}><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+);
+
 export const IconCheck = (p: IconProps) => (
   <svg {...base} {...p}><path d="M20 6L9 17l-5-5"/></svg>
 );

@@ -1077,7 +1077,52 @@ export const seedTestimonials: Testimonial[] = [
     role: "Business Analyst",
     company: "Capgemini",
     quote:
-      "Edufyi's internships stand out from the rest. Working on live projects with a prestigious company honed my skills and boosted my self-assurance, which soon led to a full-time offer.",
+      "Edufyi's internships stand out from the rest. Working on live projects with a prestigious company honed my skills and boosted my self-assurance. This experience soon led to a full-time offer.",
+    avatar_url: null,
+    rating: 5,
+  },
+  {
+    name: "Anjali",
+    role: "System Engineer",
+    company: "PwC",
+    quote:
+      "Edufyi's internship opportunities are unparalleled. I had the privilege of working on live projects for a renowned company, which significantly enhanced both my skills and confidence. I'm incredibly grateful for Edufyi's mentorship and support throughout the entire process!",
+    avatar_url: null,
+    rating: 5,
+  },
+  {
+    name: "Jeeva",
+    role: "Data Analyst",
+    company: "Wipro",
+    quote:
+      "The internships offered by Edufyi are truly exceptional. Gaining hands-on experience through real-world projects at a well-known firm helped me sharpen my skills and build confidence. I attribute my success to the invaluable guidance and mentorship provided by Edufyi.",
+    avatar_url: null,
+    rating: 5,
+  },
+  {
+    name: "Shilpa",
+    role: "UX/UI Designer",
+    company: "Cognizant",
+    quote:
+      "Edufyi provided outstanding internship opportunities, where I worked on real projects with a well-regarded company. This hands-on experience greatly improved my skills and self-confidence, and I credit Edufyi for helping me achieve this!",
+    avatar_url: null,
+    rating: 5,
+  },
+  {
+    name: "Shravya",
+    role: "Financial Analyst",
+    company: "Wipro",
+    quote:
+      "Edufyi's internships provided me with an invaluable opportunity to work on live projects for a respected firm. This practical experience boosted both my skills and confidence. I couldn't have done it without Edufyi's incredible support!",
+    avatar_url: null,
+    rating: 5,
+  },
+  {
+    name: "Tarun",
+    role: "Software Developer",
+    company: "Deloitte",
+    quote:
+      "Edufyi's internship opportunities are exceptional. By working on live projects at a well-established firm, I gained critical skills and confidence. I'm forever grateful for the guidance and mentorship I received from Edufyi!",
     avatar_url: null,
     rating: 5,
   },
